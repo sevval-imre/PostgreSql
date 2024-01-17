@@ -1,0 +1,54 @@
+Create Database dbproje
+
+*************************
+
+Create Table kategoriler (
+kategoriid int Primary Key,
+kategoriad character varying
+);
+
+****************************
+
+Create Table urun(
+urunid int Primary Key,
+urunad character varying,
+stok int,
+alisfiyat double precision,
+satisfiyat double precision,
+gorsel character varying,
+kategori int
+);
+
+*****************************
+
+ALTER TABLE IF EXISTS public.urun
+    ADD CONSTRAINT urunler_foreignkey FOREIGN KEY (kategori)
+    REFERENCES public.kategoriler (kategoriid) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+CREATE INDEX IF NOT EXISTS fki_urunler_foreignkey
+    ON public.urun(kategori);
+
+********************************
+
+INSERT INTO kategoriler (kategoriid, kategoriad) VALUES ('1', 'Beyaz Eşya')
+
+INSERT INTO kategoriler (kategoriid, kategoriad) VALUES ('2', 'Küçük Ev Aletleri')
+
+INSERT INTO kategoriler (kategoriid, kategoriad) VALUES ('3', 'Bilgisayar')
+
+INSERT INTO urun (urunid, urunad, stok, alisfiyat, satisfiyat, kategori) VALUES 
+('1', 'Buzdolabı', '20', '2000', '2400', '1')
+
+INSERT INTO urun (urunid, urunad, stok, alisfiyat, satisfiyat, kategori) VALUES 
+('2', 'Çamaşır Makinesi, '15', '1700', '2100', '1')
+
+***********************************
+
+Create View urunlistesi
+As
+Select urunid, urunad, stok, alisfiyat, satisfiyat, gorsel, kategoriad from urun inner join kategoriler
+on
+urun.kategori = kategoriler.kategoriid
+ 
